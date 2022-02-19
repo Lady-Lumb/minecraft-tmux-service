@@ -16,7 +16,7 @@ ProtectSystem=full
 PrivateDevices=no
 NoNewPrivileges=yes
 PrivateTmp=no
-InaccessiblePaths=/root /sys /srv -/opt /media -/lost+found
+#InaccessiblePaths=/root /sys /srv -/opt /media -/lost+found
 ReadWritePaths=/home/steam/pzserver /home/steam/Zomboid
 
 WorkingDirectory=/home/steam/pzserver
