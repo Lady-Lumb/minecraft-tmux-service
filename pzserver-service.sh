@@ -1,12 +1,13 @@
 #!/bin/bash
-# Minecraft service that starts the minecraft server in a tmux session
+# pzserver service that starts the pzserver server in a tmux session
 
-MC_HOME="/var/minecraft"
-MC_PID_FILE="$MC_HOME/minecraft-server.pid"
-MC_START_CMD="java -Xmx8G -Xms256M -jar spigot.jar"
+PZ_SERVER_NAME="LumbZombo"
+PZ_HOME="/home/steam/pzserver"
+PZ_PID_FILE="$PZ_HOME/pzserver-server.pid"
+PZ_START_CMD="$PZ_HOME/start-server.sh -servername $PZ_SERVER_NAME"
 
-TMUX_SOCKET="minecraft"
-TMUX_SESSION="minecraft"
+TMUX_SOCKET="pzserver"
+TMUX_SESSION="pzserver"
 
 is_server_running() {
 	tmux -L $TMUX_SOCKET has-session -t $TMUX_SESSION > /dev/null 2>&1
@@ -24,15 +25,15 @@ start_server() {
 		echo "Server already running"
 		return 1
 	fi
-	echo "Starting minecraft server in tmux session"
-	tmux -L $TMUX_SOCKET new-session -c $MC_HOME -s $TMUX_SESSION -d "$MC_START_CMD"
+	echo "Starting pzserver server in tmux session"
+	tmux -L $TMUX_SOCKET new-session -c $PZ_HOME -s $TMUX_SESSION -d "$PZ_START_CMD"
 
 	pid=$(tmux -L $TMUX_SOCKET list-sessions -F '#{pane_pid}')
 	if [ "$(echo $pid | wc -l)" -ne 1 ]; then
 		echo "Could not determine PID, multiple active sessions"
 		return 1
 	fi
-	echo -n $pid > "$MC_PID_FILE"
+	echo -n $pid > "$PZ_PID_FILE"
 
 	return $?
 }
@@ -45,18 +46,17 @@ stop_server() {
 
 	# Warn players
 	echo "Warning players"
-	mc_command "title @a times 3 14 3"
+	mc_command "servermsg \"server shutting down in ten seconds\""
 	for i in {10..1}; do
-		mc_command "title @a subtitle {\"text\":\"in $i seconds\",\"color\":\"gray\"}"
-		mc_command "title @a title {\"text\":\"Shutting down\",\"color\":\"dark_red\"}"
+		mc_command "servermsg \"server shutting down in $i seconds\""
 		sleep 1
 	done
 
 	# Issue shutdown
 	echo "Kicking players"
-	mc_command "kickall"
+	mc_command "kickuser"
 	echo "Stopping server"
-	mc_command "stop"
+	mc_command "quit"
 	if [ $? -ne 0 ]; then
 		echo "Failed to send stop command to server"
 		return 1
@@ -74,13 +74,13 @@ stop_server() {
 		fi
 	done
 
-	rm -f "$MC_PID_FILE"
+	rm -f "$PZ_PID_FILE"
 
 	return 0
 }
 
 reload_server() {
-	tmux -L $TMUX_SOCKET send-keys -t $TMUX_SESSION.0 "reload" ENTER
+	tmux -L $TMUX_SOCKET send-keys -t $TMUX_SESSION.0 "reloadoptions" ENTER
 	return $?
 }
 
