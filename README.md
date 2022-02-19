@@ -7,7 +7,7 @@ With these files a minecraft server can be started in a tmux session via systemd
 `tmux` needs to be installed on the system.
 
 The script was written for the following settings. If any of those don't match your system, you might have to change the script accordingly.
-* A user named `steam` exists on the system. This user will run the minecraft server.
+* A user named `steam` exists on the system. This user will run the project zomboid server.
 * The users home directory is `/home/steam`
 * The server files and its working directory are in the home directory (`/home/steam/pzserver`)
 
