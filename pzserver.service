@@ -1,0 +1,29 @@
+[Unit]
+Description=pzserver Server
+
+Wants=network.target
+After=network.target
+
+[Service]
+Type=forking
+User=steam
+Group=steam
+Nice=5
+TimeoutStopSec=90
+
+ProtectHome=read-only
+ProtectSystem=full
+PrivateDevices=no
+NoNewPrivileges=yes
+PrivateTmp=no
+InaccessiblePaths=/root /sys /srv -/opt /media -/lost+found
+ReadWritePaths=/home/steam/pzserver /home/steam/Zomboid
+
+WorkingDirectory=/home/steam/pzserver
+PIDFile=/home/steam/pzserver/pzserver-server.pid
+ExecStart=/home/steam/pzserver/pzserver-service.sh start
+ExecReload=/home/steam/pzserver/pzserver-service.sh reload
+ExecStop=/home/steam/pzserver/pzserver-service.sh stop
+
+[Install]
+WantedBy=multi-user.target
