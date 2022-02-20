@@ -1,7 +1,7 @@
 #!/bin/bash
 # pzserver service that starts the pzserver server in a tmux session
 
-PZ_SERVER_NAME="LumbZombo"
+PZ_SERVER_NAME="servertest"
 PZ_HOME="/home/steam/pzserver"
 PZ_PID_FILE="$PZ_HOME/pzserver-server.pid"
 PZ_START_CMD="$PZ_HOME/start-server.sh -servername $PZ_SERVER_NAME"
