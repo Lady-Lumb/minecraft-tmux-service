@@ -53,8 +53,8 @@ stop_server() {
 	done
 
 	# Issue shutdown
-	echo "Kicking players"
-	mc_command "kickuser"
+	#echo "Kicking players"
+	#mc_command "kickuser"
 	echo "Stopping server"
 	mc_command "quit"
 	if [ $? -ne 0 ]; then
